@@ -30,7 +30,7 @@
 
 ### Web 版
 Web 版本可直接访问（如已部署）。
-
+[http](https://tx.leidiandonghua.cn/)
 ## 🛠️ 技术栈
 
 *   **框架**: [Flutter](https://flutter.dev/)
