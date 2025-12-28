@@ -1,4 +1,11 @@
-一个功能强大的电子烟油调配计算器与配方管理工具，基于 Flutter 开发，支持 Android 和 Web 平台。
+![01](https://github.com/user-attachments/assets/68299f5e-5109-4e67-b7eb-c656b6de70d3)![03](https://github.com/user-attachments/assets/1db6c743-0d08-4412-b80d-8001b513c187)![04](https://github.com/user-attachments/assets/fd876e1f-0901-4ce5-9717-eb3e7276674a)![09](https://github.com/user-attachments/assets/12171613-f05d-4dca-9cd5-53a27f89258c)![10](https://github.com/user-attachments/assets/96484598-dcec-42fa-ad04-860ddad0eaa0)![15](https://github.com/user-attachments/assets/65a167cc-28d7-4f66-b989-e732c68d920e)
+
+
+
+
+
+一个功能强大
+的电子烟油调配计算器与配方管理工具，基于 Flutter 开发，支持 Android 和 Web 平台。
 
 ## ✨ 主要功能
 
