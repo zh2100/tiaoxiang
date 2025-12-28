@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>调香 (轻量版)</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #flutter-loading {
+      text-align: center;
+      display: block;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #flutter-error {
+      display: none;
+      text-align: center;
+      color: #ff6b6b;
+      margin-top: 20px;
+    }
+    .retry-btn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="flutter-loading">
+    <h2>调香</h2>
+    <p>正在加载应用...</p>
+    <div class="spinner"></div>
+  </div>
+  
+  <div id="flutter-error">
+    <h2>加载失败</h2>
+    <p>应用加载失败，请检查网络连接</p>
+    <button class="retry-btn" onclick="window.location.reload()">重试</button>
+  </div>
+
+  <!-- 首先加载配置脚本 -->
+  <script src="flutter_bootstrap.js"></script>
+  
+  <!-- 让Flutter开发服务器填充剩余部分 -->
+  <script>
+    // 在15秒后显示错误，如果应用没有加载
+    setTimeout(function() {
+      var loadingElement = document.getElementById('flutter-loading');
+      var errorElement = document.getElementById('flutter-error');
+      
+      if (loadingElement && loadingElement.style.display !== 'none') {
+        if (errorElement) {
+          errorElement.style.display = 'block';
+        }
+      }
+    }, 15000);
+  </script>
+</body>
+</html>

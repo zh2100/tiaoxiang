@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <title>调香 (稳定版)</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #loading {
+      text-align: center;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <h2>调香</h2>
+    <p>正在加载应用...</p>
+    <div class="spinner"></div>
+  </div>
+  
+  <script>
+    // 直接设置Supabase配置
+    var SUPABASE_URL = 'https://puoykbmndkxfftlkfcib.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1b3lrYm1uZGt4ZmZ0bGtmY2liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxMjg4MjYsImV4cCI6MjA2OTcwNDgyNn0.QlfXWvNrMlMTHQZZKiEhI_skXw1h9D4ES_OCpRXe-Ng';
+    
+    // 全局配置对象
+    window.__SUPABASE_CONFIG__ = {
+      SUPABASE_URL: SUPABASE_URL,
+      SUPABASE_ANON_KEY: SUPABASE_ANON_KEY
+    };
+    
+    // 保存到localStorage
+    try {
+      localStorage.setItem('SUPABASE_URL', SUPABASE_URL);
+      localStorage.setItem('SUPABASE_ANON_KEY', SUPABASE_ANON_KEY);
+      console.log('Supabase配置已保存到localStorage');
+    } catch (e) {
+      console.error('保存配置到localStorage失败:', e);
+    }
+    
+    // Flutter配置
+    window._flutter = window._flutter || {};
+    window._flutter.buildConfig = {
+      builds: [
+        {
+          renderer: "html",
+          mainJsPath: "main.dart.js",
+          compileTarget: "dartjs"
+        }
+      ]
+    };
+  </script>
+  
+  <!-- 先加载核心Flutter脚本 -->
+  <script src="flutter.js"></script>
+  
+  <!-- 然后配置并启动Flutter应用 -->
+  <script>
+    // 定义加载Flutter的函数
+    function loadFlutter() {
+      console.log("正在加载Flutter应用...");
+      if (window._flutter && window._flutter.loader) {
+        window._flutter.loader.load({
+          onEntrypointLoaded: function(engineInitializer) {
+            console.log("Flutter入口点已加载");
+            engineInitializer.initializeEngine({
+              renderer: 'html'
+            }).then(function(appRunner) {
+              console.log("Flutter引擎已初始化，运行应用");
+              appRunner.runApp();
+            });
+          }
+        }).catch(function(error) {
+          console.error("Flutter加载失败:", error);
+          document.getElementById('loading').innerHTML = 
+            '<h2>加载失败</h2><p>应用加载时发生错误: ' + error + '</p>' +
+            '<button onclick="window.location.reload()">重试</button>';
+        });
+      } else {
+        console.error("Flutter加载器不可用");
+        document.getElementById('loading').innerHTML = 
+          '<h2>加载失败</h2><p>Flutter加载器不可用</p>' +
+          '<button onclick="window.location.reload()">重试</button>';
+      }
+    }
+    
+    // 当文档加载完成时加载Flutter
+    if (document.readyState === 'complete') {
+      loadFlutter();
+    } else {
+      window.addEventListener('load', loadFlutter);
+    }
+  </script>
+</body>
+</html>

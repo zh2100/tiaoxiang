@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <title>调香 (轻量版)</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #loading {
+      text-align: center;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <h2>调香</h2>
+    <p>正在加载轻量版应用...</p>
+    <div class="spinner"></div>
+  </div>
+  
+  <script>
+    // 简化的配置对象
+    window.__SUPABASE_CONFIG__ = {
+      SUPABASE_URL: 'https://puoykbmndkxfftlkfcib.supabase.co',
+      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1b3lrYm1uZGt4ZmZ0bGtmY2liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxMjg4MjYsImV4cCI6MjA2OTcwNDgyNn0.QlfXWvNrMlMTHQZZKiEhI_skXw1h9D4ES_OCpRXe-Ng'
+    };
+    
+    // 简化的localStorage操作
+    try {
+      if (!localStorage.getItem('SUPABASE_URL')) {
+        localStorage.setItem('SUPABASE_URL', window.__SUPABASE_CONFIG__.SUPABASE_URL);
+        localStorage.setItem('SUPABASE_ANON_KEY', window.__SUPABASE_CONFIG__.SUPABASE_ANON_KEY);
+      }
+    } catch (e) {
+      // 出错时静默处理
+    }
+    
+    // Flutter配置
+    window._flutter = window._flutter || {};
+    window._flutter.buildConfig = {
+      builds: [
+        {
+          renderer: "html",  // 强制使用HTML渲染器，更轻量
+          mainJsPath: "main.dart.js",
+          compileTarget: "dartjs"
+        }
+      ]
+    };
+  </script>
+  
+  <!-- 异步加载Flutter -->
+  <script src="flutter.js"></script>
+  <script>
+    // 直接加载Flutter，不使用延迟
+    if (window.flutter_web_optimizer) {
+      window.flutter_web_optimizer.loadEntrypoint({
+        moduleLoader: (moduleName) => {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = moduleName;
+            script.type = 'text/javascript';
+            script.async = true;
+            script.onload = () => resolve();
+            script.onerror = reject;
+            document.body.appendChild(script);
+          });
+        },
+        entrypointUrl: 'main.dart.js',
+      });
+    } else {
+      window._flutter = window._flutter || {};
+      _flutter.loader.load({
+        renderer: "html"
+      });
+    }
+  </script>
+</body>
+</html>

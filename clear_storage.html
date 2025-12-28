@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清理存储</title>
+</head>
+<body>
+    <h1>清理浏览器存储</h1>
+    <button onclick="clearStorage()">清理所有存储</button>
+    <div id="result"></div>
+    
+    <script>
+        function clearStorage() {
+            try {
+                // 清理localStorage
+                localStorage.clear();
+                console.log('localStorage已清理');
+                
+                // 清理sessionStorage
+                sessionStorage.clear();
+                console.log('sessionStorage已清理');
+                
+                // 清理indexedDB中的Supabase数据
+                if ('indexedDB' in window) {
+                    const deleteReq = indexedDB.deleteDatabase('supabase-js-db');
+                    deleteReq.onsuccess = function() {
+                        console.log('IndexedDB已清理');
+                    };
+                }
+                
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: green;">存储已清理，请刷新主应用页面</p>';
+                    
+            } catch (e) {
+                console.error('清理存储失败:', e);
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: red;">清理失败: ' + e.message + '</p>';
+            }
+        }
+        
+        // 页面加载时显示当前存储状态
+        window.onload = function() {
+            const keys = Object.keys(localStorage);
+            document.getElementById('result').innerHTML = 
+                '<p>当前localStorage中有 ' + keys.length + ' 个项目</p>' +
+                '<pre>' + keys.join('\n') + '</pre>';
+        };
+    </script>
+</body>
+</html>

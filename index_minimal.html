@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>调香</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #loading {
+      text-align: center;
+      padding: 20px;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #error-container {
+      display: none;
+      text-align: center;
+      color: #ff6b6b;
+      margin-top: 20px;
+      padding: 20px;
+    }
+    .retry-button {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <h2>调香</h2>
+    <p>正在加载应用...</p>
+    <div class="spinner"></div>
+  </div>
+  
+  <div id="error-container">
+    <h2>加载失败</h2>
+    <p>应用加载失败，请检查网络连接</p>
+    <button class="retry-button" onclick="window.location.reload()">重试</button>
+  </div>
+
+  <script>
+    // 直接设置Supabase配置
+    window.__SUPABASE_CONFIG__ = {
+      SUPABASE_URL: 'https://puoykbmndkxfftlkfcib.supabase.co',
+      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1b3lrYm1uZGt4ZmZ0bGtmY2liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxMjg4MjYsImV4cCI6MjA2OTcwNDgyNn0.QlfXWvNrMlMTHQZZKiEhI_skXw1h9D4ES_OCpRXe-Ng'
+    };
+    
+    // 保存到localStorage (静默处理错误)
+    try {
+      localStorage.setItem('SUPABASE_URL', window.__SUPABASE_CONFIG__.SUPABASE_URL);
+      localStorage.setItem('SUPABASE_ANON_KEY', window.__SUPABASE_CONFIG__.SUPABASE_ANON_KEY);
+    } catch (e) {}
+    
+    // 错误处理
+    window.onerror = function(message, source, lineno, colno, error) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-container').style.display = 'block';
+      console.error('应用错误:', message);
+      return true;
+    };
+    
+    // 设置加载超时
+    setTimeout(function() {
+      if (document.getElementById('loading').style.display !== 'none') {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error-container').style.display = 'block';
+      }
+    }, 30000);
+  </script>
+</body>
+</html>

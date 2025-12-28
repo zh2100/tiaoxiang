@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Vape Calculator - Supabase测试</h1>
+    <div id="status"></div>
+    
+    <button onclick="testConfig()">测试配置</button>
+    <button onclick="clearStorage()">清理存储</button>
+    <button onclick="testApp()">测试应用</button>
+    
+    <div id="logs"></div>
+    
+    <script src="env_config.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            logs.appendChild(div);
+            console.log(message);
+        }
+        
+        function testConfig() {
+            log('开始测试配置...');
+            
+            // 检查全局配置
+            if (window.__SUPABASE_CONFIG__) {
+                log('✓ 全局配置已加载', 'success');
+                log('URL: ' + window.__SUPABASE_CONFIG__.SUPABASE_URL, 'info');
+            } else {
+                log('✗ 全局配置未找到', 'error');
+            }
+            
+            // 检查localStorage
+            const url = localStorage.getItem('SUPABASE_URL');
+            const key = localStorage.getItem('SUPABASE_ANON_KEY');
+            
+            if (url && key) {
+                log('✓ localStorage配置已加载', 'success');
+            } else {
+                log('✗ localStorage配置缺失', 'error');
+            }
+        }
+        
+        function clearStorage() {
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                log('✓ 存储已清理', 'success');
+            } catch (e) {
+                log('✗ 清理失败: ' + e.message, 'error');
+            }
+        }
+        
+        function testApp() {
+            log('重定向到主应用...');
+            window.location.href = '/';
+        }
+        
+        // 页面加载时自动测试
+        window.onload = function() {
+            log('页面加载完成');
+            testConfig();
+        };
+    </script>
+</body>
+</html>
